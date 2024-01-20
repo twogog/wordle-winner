@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+    <title>Wordle Winner</title>
+  </head>
+  <body class="m-0 py-10 bg-blue-50">
+    <div class="wrapper m-auto max-w-xs">
+      <form
+        class="border-blue-700 flex flex-col content-center items-center py-5 rounded border bg-gray-300"
+      >
+        <input
+          type="number"
+          max="10"
+          min="3"
+          placeholder="длина слова..."
+          id="numbers"
+          class="border rounded border-blue-700 p-1 my-1 w-[80%] max-w-[70%]"
+        />
+
+        <input
+          type="text"
+          placeholder="исключенные буквы..."
+          autocomplete="off"
+          id="wrongWords"
+          class="border rounded border-blue-700 p-1 my-1 w-[80%] max-w-[70%]"
+        />
+        <button
+          class="border active:opacity-50 p-1 my-1 rounded border-blue-700"
+          type="submit"
+        >
+          Сгенерировать
+        </button>
+      </form>
+    </div>
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>
