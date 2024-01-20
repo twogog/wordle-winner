@@ -1,5 +1,4 @@
 const form = document.querySelector("form");
-const numbersInput = document.getElementById("numbers");
 const wrongWordsInput = document.getElementById("wrongWords");
 
 const words = await getWords(5);
@@ -88,7 +87,7 @@ function generatorWorker(idElement, valueElement) {
   const [, number] = idElement.split("-");
   const letter = form.querySelector(`#letter-${number}`);
 
-  if (idElement.includes("numbers")) {
+  if (idElement.includes("numbers") && +valueElement <= 10) {
     renderWord(valueElement);
     generateInitial(+valueElement);
   }
