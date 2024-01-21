@@ -1,7 +1,7 @@
 const form = document.querySelector("form");
 const wrongWordsInput = document.getElementById("wrongWords");
 
-const words = await getWords(5);
+const words = JSON.parse(await fetch(`./words.json`).then((res) => res.text()));
 
 const generator = {
   wrongLetters: "",
@@ -73,7 +73,6 @@ function wordsFilterByRegexses() {
   const wrightLetters = (word) => word.match(regexpRight);
   const wrongLetters = (word) => !word.match(regexpWrong);
   const looseLetters = (word) => word.match(regexpLoose);
-
   return words.filter(
     (word) =>
       word.length === +generator.wordLength &&
@@ -162,23 +161,11 @@ function generatorWorker(idElement, valueElement) {
 }
 
 function renderFloatingInfo(wordsList) {
-  if (!wordsList.length || !wordsList[0]) return;
+  if (!wordsList.length || !wordsList[0]) wordsList = ["ничего не найдено"];
   const floating = document.querySelector(".floating");
   floating && form.parentElement.removeChild(floating);
   const div = document.createElement("div");
   div.classList.add("floating", "border-blue-700", "border", "rounded");
   div.innerHTML = wordsList.join(", ");
   form.parentElement.append(div);
-}
-
-async function getWords(chunks) {
-  const words = [];
-  for (let i = 1; i <= chunks; i++) {
-    words.push(
-      JSON.parse(
-        await fetch(`./words/words-${i}.json`).then((res) => res.text())
-      )
-    );
-  }
-  return words.flat();
 }
