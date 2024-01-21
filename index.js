@@ -1,7 +1,7 @@
 const form = document.querySelector("form");
 const wrongWordsInput = document.getElementById("wrongWords");
 
-const words = JSON.parse(await fetch(`./words.json`).then((res) => res.text()));
+const words = await fetch(`./words.json`).then((res) => res.json());
 
 const generator = {
   wrongLetters: "",
