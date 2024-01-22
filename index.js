@@ -88,7 +88,7 @@ function generatorWorker(idElement, valueElement, element) {
   const number = Number(idElement.split("-")?.[1]);
   const letter = form.querySelector(`#letter-${number}`);
 
-  if (idElement.includes("numbers") && +valueElement <= 10) {
+  if (idElement.includes("numbers")) {
     renderWord(valueElement);
     generateInitial(+valueElement);
   }
