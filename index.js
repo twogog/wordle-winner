@@ -8,6 +8,7 @@ const generator = {
   containerEl: null,
   wordLength: null,
   inputInfo: [],
+  currentInputsEl: [],
 };
 
 const tailwindClasses = {
@@ -42,6 +43,7 @@ function renderWord(number) {
   `;
   }
   form.insertBefore(containerEl, wrongWordsInput);
+  generator.currentInputsEl = document.querySelectorAll('[id^="letter-"]');
 }
 
 function generateInitial(wordLength) {
@@ -83,7 +85,7 @@ function wordsFilterByRegexses() {
 }
 
 function generatorWorker(idElement, valueElement) {
-  const [, number] = idElement.split("-");
+  const number = Number(idElement.split("-")?.[1]);
   const letter = form.querySelector(`#letter-${number}`);
 
   if (idElement.includes("numbers") && +valueElement <= 10) {
@@ -101,9 +103,10 @@ function generatorWorker(idElement, valueElement) {
     generator.inputInfo[number - 1].letter = valueElement
       ? valueElement.toLowerCase()
       : ".";
-    valueElement.length > 0 &&
-      !valueElement.match(/[а-я]/i) &&
-      alert("Поддерживает только кириллицу");
+    if (valueElement.length > 0) {
+      !valueElement.match(/[а-я]/i) && alert("Поддерживает только кириллицу");
+      focusContoller(valueElement.length);
+    }
 
     if (!valueElement.length) {
       classToggler(
@@ -115,6 +118,7 @@ function generatorWorker(idElement, valueElement) {
       letter.previousElementSibling.checked = false;
       letter.nextElementSibling.checked = false;
       generator.inputInfo[number - 1].type = "loose";
+      focusContoller(valueElement.length);
     }
 
     if (
@@ -157,6 +161,18 @@ function generatorWorker(idElement, valueElement) {
     for (const [type, className] of classList) {
       el.classList[type](className);
     }
+  }
+
+  function focusContoller(length) {
+    if (length > 0) {
+      number !== generator.wordLength &&
+        generator.currentInputsEl[number - 1].blur();
+      number !== generator.wordLength &&
+        generator.currentInputsEl[number].focus();
+      return;
+    }
+    number !== 1 && generator.currentInputsEl[number - 1].blur();
+    number !== 1 && generator.currentInputsEl[number - 2].focus();
   }
 }
 
