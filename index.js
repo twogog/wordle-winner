@@ -166,6 +166,22 @@ function renderFloatingInfo(wordsList) {
   floating && form.parentElement.removeChild(floating);
   const div = document.createElement("div");
   div.classList.add("floating", "border-blue-700", "border", "rounded");
-  div.innerHTML = wordsList.join(", ");
+  const tdSameClasses = "border-2 border-black p-1 text-xl";
+  div.innerHTML = `
+  <table class='border-collapse w-full opacity-75'>
+	  <tbody>
+	  	${wordsList
+        .map(
+          (word, ind) => `
+        <tr>
+          <td class='${tdSameClasses} w-1/5'>${ind + 1}.</td>
+          <td class='${tdSameClasses} text-left'>${word}</td>
+        </tr>
+        `
+        )
+        .join("")}
+	  </tbody>
+</table>
+  `;
   form.parentElement.append(div);
 }
