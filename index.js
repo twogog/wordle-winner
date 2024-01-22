@@ -126,7 +126,7 @@ function generatorWorker(idElement, valueElement, element) {
         }
         break;
       default:
-        element.value = element.value.slice(0, 1);
+        element.target.value = element.target.value.slice(0, 1);
     }
 
     if (
