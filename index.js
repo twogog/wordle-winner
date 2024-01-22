@@ -25,7 +25,7 @@ form.addEventListener("submit", (e) => {
 form.addEventListener("input", (e) => {
   e.preventDefault();
   const { id, value } = e.target;
-  generatorWorker(id, value);
+  generatorWorker(id, value, e);
 });
 
 function renderWord(number) {
@@ -84,7 +84,7 @@ function wordsFilterByRegexses() {
   );
 }
 
-function generatorWorker(idElement, valueElement) {
+function generatorWorker(idElement, valueElement, element) {
   const number = Number(idElement.split("-")?.[1]);
   const letter = form.querySelector(`#letter-${number}`);
 
@@ -103,22 +103,30 @@ function generatorWorker(idElement, valueElement) {
     generator.inputInfo[number - 1].letter = valueElement
       ? valueElement.toLowerCase()
       : ".";
-    if (valueElement.length > 0) {
-      !valueElement.match(/[а-я]/i) && alert("Поддерживает только кириллицу");
-      focusContoller(valueElement.length);
-    }
-
-    if (!valueElement.length) {
-      classToggler(
-        letter,
-        ["remove", "loose"],
-        ["remove", "strict"],
-        ["add", tailwindClasses.bg.gray]
-      );
-      letter.previousElementSibling.checked = false;
-      letter.nextElementSibling.checked = false;
-      generator.inputInfo[number - 1].type = "loose";
-      focusContoller(valueElement.length);
+    switch (valueElement.length) {
+      case 0:
+        {
+          classToggler(
+            letter,
+            ["remove", "loose"],
+            ["remove", "strict"],
+            ["add", tailwindClasses.bg.gray]
+          );
+          letter.previousElementSibling.checked = false;
+          letter.nextElementSibling.checked = false;
+          generator.inputInfo[number - 1].type = "loose";
+          focusContoller(valueElement.length);
+        }
+        break;
+      case 1:
+        {
+          !valueElement.match(/[а-я]/i) &&
+            alert("Поддерживает только кириллицу");
+          focusContoller(valueElement.length);
+        }
+        break;
+      default:
+        element.value = element.value.slice(0, 1);
     }
 
     if (
