@@ -22,10 +22,15 @@ input[type=radio]:hover {
 
 .floating {
     margin-top: 10px;
-    max-height: 200px;
+    max-height: 45vh;
     background-color: rgba(254, 243, 199);
     overflow-y: auto;
     text-align: center;
     padding: 5px;
     text-justify: distribute;
+}
+
+.fader {
+    opacity: 0;
+    pointer-events: none;
 }

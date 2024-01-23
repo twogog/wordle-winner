@@ -1,5 +1,6 @@
 const form = document.querySelector("form");
 const wrongWordsInput = document.getElementById("wrongWords");
+const numbersInput = document.getElementById("numbers");
 
 const words = await fetch(`./words.json`).then((res) => res.json());
 
@@ -9,6 +10,7 @@ const generator = {
   wordLength: null,
   inputInfo: [],
   currentInputsEl: [],
+  timerId: null,
 };
 
 const tailwindClasses = {
@@ -100,6 +102,7 @@ function generatorWorker(idElement, valueElement, element) {
   }
 
   if (idElement.includes("letter")) {
+    hideElement(generator.timerId, numbersInput);
     generator.inputInfo[number - 1].letter = valueElement
       ? valueElement.toLowerCase()
       : ".";
@@ -208,4 +211,12 @@ function renderFloatingInfo(wordsList) {
 </table>
   `;
   form.parentElement.append(div);
+}
+
+function hideElement(timerId, element) {
+  timerId && clearTimeout(timerId);
+  element.classList.add("fader");
+  generator.timerId = setTimeout(() => {
+    element.classList.remove("fader");
+  }, 2000);
 }
