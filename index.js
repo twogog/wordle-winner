@@ -11,6 +11,7 @@ const generator = {
   inputInfo: [],
   currentInputsEl: [],
   timerId: null,
+  paginateStep: 10,
 };
 
 const tailwindClasses = {
@@ -189,28 +190,70 @@ function generatorWorker(idElement, valueElement, element) {
 
 function renderFloatingInfo(wordsList) {
   if (!wordsList.length || !wordsList[0]) wordsList = ["ничего не найдено"];
-  const floating = document.querySelector(".floating");
-  floating && form.parentElement.removeChild(floating);
-  const div = document.createElement("div");
-  div.classList.add("floating", "border-blue-700", "border", "rounded");
-  const tdSameClasses = "border-2 border-black p-1 text-xl";
-  div.innerHTML = `
-  <table class='border-collapse w-full opacity-75'>
-	  <tbody>
-	  	${wordsList
-        .map(
-          (word, ind) => `
-        <tr>
-          <td class='${tdSameClasses} w-1/5'>${ind + 1}.</td>
-          <td class='${tdSameClasses} text-left'>${word}</td>
-        </tr>
-        `
-        )
-        .join("")}
-	  </tbody>
-</table>
-  `;
-  form.parentElement.append(div);
+  clearPrev();
+
+  const { paginContent, paginator } = makeDivWithPaginContent(
+    generator.paginateStep
+  );
+  paginator.addEventListener("input", (e) => {
+    const { value: rangeInputNumber } = e.target;
+    paginContent.innerHTML = getTbody(generator.paginateStep, rangeInputNumber);
+  });
+
+  function makeDivWithPaginContent(step) {
+    const div = document.createElement("div");
+    div.classList.add("floating", "border-blue-700", "border", "rounded");
+    div.innerHTML = getInitialTable(step);
+    form.parentElement.append(div);
+    return {
+      paginContent: document.querySelector("#pagin-content"),
+      paginator: document.querySelector("#paginator"),
+    };
+  }
+
+  function getInitialTable(step) {
+    return `
+    <table class='border-collapse w-full opacity-75 h-4/5'>
+      <tbody id='pagin-content'>
+        ${getTbody(step)}
+      </tbody>
+    </table>
+    <input id='paginator' 
+      type='range' 
+      min='1' 
+      value='1' 
+      max=${Math.ceil(wordsList.length / step)} 
+      class='cursor-pointer w-[70%] mt-3'
+    >
+    `;
+  }
+
+  function getTbody(step, rangeInputNumber) {
+    const tdSameClasses = "border-2 border-black p-1 text-xl";
+    return `
+    ${wordsList
+      .slice(
+        rangeInputNumber ? rangeInputNumber * step - step : 0,
+        rangeInputNumber ? rangeInputNumber * step : step
+      )
+      .map(
+        (word, ind) => `
+      <tr>
+        <td class='${tdSameClasses} w-1/5'>${
+          rangeInputNumber ? rangeInputNumber * step - step + ind + 1 : ind + 1
+        }.</td>
+        <td class='${tdSameClasses} text-left'>${word}</td>
+      </tr>
+      `
+      )
+      .join("")}
+    `;
+  }
+
+  function clearPrev() {
+    const floating = document.querySelector(".floating");
+    floating && form.parentElement.removeChild(floating);
+  }
 }
 
 function hideElement(timerId, element) {
